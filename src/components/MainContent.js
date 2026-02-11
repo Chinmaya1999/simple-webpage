@@ -39,7 +39,7 @@ const MainContent = () => {
           <div style={styles.badge}>🚀 DevOps Engineer</div>
           
           <h1 style={styles.heroTitle}>
-            Hi, I'm <span style={styles.highlight}>Alex Chen</span>
+            Hi, I'm <span style={styles.highlight}>Chinmaya</span>
             <div style={styles.typewriter}>
               Building Scalable Cloud Infrastructure
             </div>

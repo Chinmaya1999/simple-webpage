@@ -116,7 +116,7 @@ const Footer = () => {
                   <FiTerminal />
                 </div>
                 <div style={styles.brandText}>
-                  <h3 style={styles.brandName}>Alex Chen</h3>
+                  <h3 style={styles.brandName}>Chinmaya</h3>
                   <p style={styles.brandTagline}>DevOps & Cloud Engineer</p>
                 </div>
               </div>
@@ -229,7 +229,7 @@ const Footer = () => {
           <div style={styles.footerContainer}>
             <div style={styles.copyrightSection}>
               <p style={styles.copyrightText}>
-                © {currentYear} Alex Chen. All rights reserved.
+                © {currentYear} Chinmaya. All rights reserved.
               </p>
               <div style={styles.credits}>
                 <span style={styles.creditItem}>

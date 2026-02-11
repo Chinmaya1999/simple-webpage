@@ -154,7 +154,7 @@ const About = () => {
                 </div>
               </div>
               <div style={styles.profileInfo}>
-                <h3 style={styles.profileName}>Alex Chen</h3>
+                <h3 style={styles.profileName}>Chinmaya</h3>
                 <p style={styles.profileTitle}>Senior DevOps Engineer</p>
                 <div style={styles.profileStats}>
                   <div style={styles.statItem}>
