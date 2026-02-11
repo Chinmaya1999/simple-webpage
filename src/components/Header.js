@@ -6,13 +6,18 @@ import {
   FiCloud, 
   FiServer, 
   FiCode,
-  FiChevronDown
+  FiChevronDown,
+  FiHome,
+  FiUser,
+  FiBriefcase,
+  FiTool
 } from 'react-icons/fi';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeNav, setActiveNav] = useState('home');
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,15 +36,26 @@ const Header = () => {
       if (current) setActiveNav(current);
     };
 
+    // Check mobile viewport
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile(); // Initial check
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', checkMobile);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   const navItems = [
-    { id: 'home', label: 'Home', icon: <FiTerminal /> },
-    { id: 'about', label: 'About', icon: <FiCloud /> },
-    { id: 'projects', label: 'Projects', icon: <FiServer /> },
-    { id: 'skills', label: 'Skills', icon: <FiCode /> },
+    { id: 'home', label: 'Home', icon: <FiHome /> },
+    { id: 'about', label: 'About', icon: <FiUser /> },
+    { id: 'projects', label: 'Projects', icon: <FiBriefcase /> },
+    { id: 'skills', label: 'Skills', icon: <FiTool /> },
     { id: 'contact', label: 'Contact', icon: <FiCloud /> },
   ];
 
@@ -60,6 +76,7 @@ const Header = () => {
         backdropFilter: scrolled ? 'blur(10px)' : 'none',
         boxShadow: scrolled ? '0 10px 30px -10px rgba(2, 12, 27, 0.7)' : 'none',
         transition: 'all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1)',
+        padding: isMobile ? '0 15px' : '0 20px',
       }}>
         <div style={styles.navContainer}>
           {/* Logo */}
@@ -67,14 +84,17 @@ const Header = () => {
             <div style={styles.logoIcon}>
               <FiTerminal />
             </div>
-            <div>
+            <div style={styles.logoText}>
               <h2 style={styles.logoName}>Chinmaya</h2>
               <p style={styles.tagline}>DevOps & Cloud Engineer</p>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <div style={styles.desktopNav}>
+          <div style={{
+            ...styles.desktopNav,
+            display: isMobile ? 'none' : 'flex'
+          }}>
             <ul style={styles.navList}>
               {navItems.map((item) => (
                 <li key={item.id} style={styles.navItem}>
@@ -108,7 +128,10 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <button 
-            style={styles.menuButton}
+            style={{
+              ...styles.menuButton,
+              display: isMobile ? 'block' : 'none'
+            }}
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -118,7 +141,7 @@ const Header = () => {
       </nav>
 
       {/* Mobile Menu */}
-      {isOpen && (
+      {isOpen && isMobile && (
         <div style={styles.mobileMenu}>
           <div style={styles.mobileMenuContent}>
             {navItems.map((item) => (
@@ -147,19 +170,21 @@ const Header = () => {
         </div>
       )}
 
-      {/* Status Bar */}
-      <div style={styles.statusBar}>
-        <div style={styles.statusContainer}>
-          <div style={styles.statusItem}>
-            <div style={styles.statusDot}></div>
-            <span style={styles.statusText}>Available for freelance</span>
-          </div>
-          <div style={styles.statusItem}>
-            <div style={{...styles.statusDot, backgroundColor: '#64ffda'}}></div>
-            <span style={styles.statusText}>Online</span>
+      {/* Status Bar - Only show on desktop */}
+      {!isMobile && scrolled && (
+        <div style={styles.statusBar}>
+          <div style={styles.statusContainer}>
+            <div style={styles.statusItem}>
+              <div style={styles.statusDot}></div>
+              <span style={styles.statusText}>Available for freelance</span>
+            </div>
+            <div style={styles.statusItem}>
+              <div style={{...styles.statusDot, backgroundColor: '#64ffda'}}></div>
+              <span style={styles.statusText}>Online</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
@@ -180,45 +205,57 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '20px 0',
+    padding: '15px 0',
   },
   logoContainer: {
     display: 'flex',
     alignItems: 'center',
-    gap: '15px',
+    gap: '12px',
   },
   logoIcon: {
-    fontSize: '32px',
+    fontSize: '24px',
     color: '#64ffda',
     backgroundColor: 'rgba(100, 255, 218, 0.1)',
-    width: '50px',
-    height: '50px',
-    borderRadius: '10px',
+    width: '40px',
+    height: '40px',
+    borderRadius: '8px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
+  },
+  logoText: {
+    display: 'flex',
+    flexDirection: 'column',
+    minWidth: 0, // Allow text to shrink
   },
   logoName: {
-    fontSize: '22px',
+    fontSize: '18px',
     fontWeight: '700',
     color: '#e6f1ff',
     margin: 0,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   tagline: {
-    fontSize: '12px',
+    fontSize: '10px',
     color: '#8892b0',
-    margin: '4px 0 0 0',
-    letterSpacing: '1px',
+    margin: '2px 0 0 0',
+    letterSpacing: '0.5px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   desktopNav: {
     display: 'flex',
     alignItems: 'center',
-    gap: '40px',
+    gap: '20px',
   },
   navList: {
     display: 'flex',
     listStyle: 'none',
-    gap: '30px',
+    gap: '15px',
     margin: 0,
     padding: 0,
   },
@@ -230,17 +267,19 @@ const styles = {
     border: 'none',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
-    fontSize: '15px',
+    gap: '6px',
+    fontSize: '14px',
     fontWeight: '500',
     cursor: 'pointer',
-    padding: '10px 0',
+    padding: '8px 0',
     position: 'relative',
     transition: 'all 0.3s ease',
     color: '#ccd6f6',
+    whiteSpace: 'nowrap',
   },
   navIcon: {
-    fontSize: '16px',
+    fontSize: '14px',
+    flexShrink: 0,
   },
   activeIndicator: {
     position: 'absolute',
@@ -256,42 +295,44 @@ const styles = {
     color: '#64ffda',
     border: '1px solid #64ffda',
     borderRadius: '4px',
-    padding: '12px 24px',
-    fontSize: '14px',
+    padding: '8px 16px',
+    fontSize: '12px',
     fontWeight: '500',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     transition: 'all 0.3s ease',
-    letterSpacing: '1px',
+    letterSpacing: '0.5px',
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
   },
   menuButton: {
-    display: 'none',
     background: 'none',
     border: 'none',
     color: '#64ffda',
     fontSize: '24px',
     cursor: 'pointer',
-    padding: '10px',
+    padding: '8px',
     zIndex: 1001,
+    display: 'none',
   },
   mobileMenu: {
     position: 'fixed',
-    top: '90px',
+    top: '70px',
     left: 0,
     right: 0,
     backgroundColor: 'rgba(10, 25, 47, 0.98)',
     backdropFilter: 'blur(10px)',
     zIndex: 999,
     animation: 'slideDown 0.3s ease',
+    height: 'calc(100vh - 70px)',
+    overflowY: 'auto',
   },
   mobileMenuContent: {
-    maxWidth: '1400px',
-    margin: '0 auto',
-    padding: '20px',
+    padding: '20px 15px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
+    gap: '8px',
   },
   mobileNavButton: {
     background: 'none',
@@ -299,7 +340,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '15px',
-    fontSize: '18px',
+    fontSize: '16px',
     fontWeight: '500',
     cursor: 'pointer',
     padding: '15px',
@@ -307,10 +348,13 @@ const styles = {
     position: 'relative',
     transition: 'all 0.3s ease',
     color: '#ccd6f6',
+    width: '100%',
+    borderRadius: '8px',
   },
   mobileNavIcon: {
-    fontSize: '20px',
+    fontSize: '18px',
     width: '24px',
+    flexShrink: 0,
   },
   mobileActiveIndicator: {
     position: 'absolute',
@@ -326,23 +370,23 @@ const styles = {
     backgroundColor: 'rgba(100, 255, 218, 0.1)',
     color: '#64ffda',
     border: '1px solid #64ffda',
-    borderRadius: '4px',
+    borderRadius: '8px',
     padding: '16px 24px',
     fontSize: '16px',
     fontWeight: '500',
     cursor: 'pointer',
     marginTop: '20px',
     transition: 'all 0.3s ease',
+    width: '100%',
   },
   statusBar: {
     position: 'fixed',
-    top: '90px',
+    top: '70px',
     left: 0,
     right: 0,
     backgroundColor: 'rgba(2, 12, 27, 0.8)',
     zIndex: 998,
-    padding: '8px 20px',
-    display: 'none',
+    padding: '6px 20px',
   },
   statusContainer: {
     maxWidth: '1400px',
@@ -356,57 +400,83 @@ const styles = {
     gap: '8px',
   },
   statusDot: {
-    width: '8px',
-    height: '8px',
+    width: '6px',
+    height: '6px',
     borderRadius: '50%',
     backgroundColor: '#ff5f56',
     animation: 'pulse 2s infinite',
   },
   statusText: {
-    fontSize: '12px',
+    fontSize: '10px',
     color: '#8892b0',
   },
 };
 
 // Add keyframes for animations
 const styleSheet = document.styleSheets[0];
+
+// Remove duplicate keyframe definitions if they exist
+// Just add the hover effects and responsive styles
 styleSheet.insertRule(`
-  @keyframes slideIn {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
+  @media (max-width: 768px) {
+    .nav-button {
+      font-size: 13px;
+      gap: 4px;
+    }
+    
+    .nav-list {
+      gap: 10px;
+    }
+    
+    .logo-name {
+      font-size: 16px;
+    }
+    
+    .tagline {
+      font-size: 9px;
+    }
+    
+    .cta-button {
+      padding: 6px 12px;
+      font-size: 11px;
+    }
   }
 `, styleSheet.cssRules.length);
 
 styleSheet.insertRule(`
-  @keyframes slideDown {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  @media (max-width: 480px) {
+    .logo-icon {
+      width: 35px;
+      height: 35px;
+      font-size: 20px;
+    }
+    
+    .logo-name {
+      font-size: 15px;
+    }
+    
+    .tagline {
+      font-size: 8px;
+    }
+    
+    .nav-container {
+      padding: 12px 0;
+    }
   }
 `, styleSheet.cssRules.length);
 
 styleSheet.insertRule(`
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-`, styleSheet.cssRules.length);
-
-// Responsive styles
-styleSheet.insertRule(`
-  @media (max-width: 1024px) {
-    .desktop-nav {
+  @media (max-width: 360px) {
+    .logo-container {
+      gap: 8px;
+    }
+    
+    .logo-name {
+      font-size: 14px;
+    }
+    
+    .tagline {
       display: none;
-    }
-    .menu-button {
-      display: block;
-    }
-  }
-`, styleSheet.cssRules.length);
-
-styleSheet.insertRule(`
-  @media (min-width: 1025px) {
-    .mobile-menu {
-      display: none !important;
     }
   }
 `, styleSheet.cssRules.length);
@@ -423,14 +493,50 @@ styleSheet.insertRule(`
   .cta-button:hover {
     background-color: rgba(100, 255, 218, 0.1);
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px -10px rgba(100, 255, 218, 0.3);
+    box-shadow: 0 5px 15px -5px rgba(100, 255, 218, 0.3);
   }
 `, styleSheet.cssRules.length);
 
 styleSheet.insertRule(`
   .mobile-nav-button:hover {
     background-color: rgba(100, 255, 218, 0.05);
-    padding-left: 25px;
+    padding-left: 20px;
+  }
+`, styleSheet.cssRules.length);
+
+styleSheet.insertRule(`
+  .mobile-cta-button:hover {
+    background-color: rgba(100, 255, 218, 0.2);
+    transform: translateY(-2px);
+  }
+`, styleSheet.cssRules.length);
+
+// Add touch device optimizations
+styleSheet.insertRule(`
+  @media (hover: none) and (pointer: coarse) {
+    .nav-button:hover,
+    .cta-button:hover,
+    .mobile-nav-button:hover,
+    .mobile-cta-button:hover {
+      transform: none;
+    }
+    
+    .nav-button:active,
+    .cta-button:active {
+      opacity: 0.7;
+    }
+    
+    .mobile-nav-button:active,
+    .mobile-cta-button:active {
+      background-color: rgba(100, 255, 218, 0.1);
+    }
+  }
+`, styleSheet.cssRules.length);
+
+// Prevent body scroll when menu is open
+styleSheet.insertRule(`
+  body.menu-open {
+    overflow: hidden;
   }
 `, styleSheet.cssRules.length);
 
