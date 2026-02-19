@@ -1,29 +1,24 @@
 - hosts: web
   become: yes
-  tasks:
-    - name: Copy build files
-      copy:
-        src: ./build/
-        dest: /var/www/react-app/
-    
-    - name: Configure nginx
-      copy:
-        dest: /etc/nginx/sites-available/react-app
-        content: |
-          server {
-              listen 80;
-              root /var/www/react-app;
-              index index.html;
-              location / {
-                  try_files $uri /index.html;
-              }
-          }
 
-    - name: Enable site
+  tasks:
+    - name: Ensure rsync is installed
+      package:
+        name: rsync
+        state: present
+
+    - name: Ensure nginx html directory exists
       file:
-        src: /etc/nginx/sites-available/react-app
-        dest: /etc/nginx/sites-enabled/react-app
-        state: link
+        path: /usr/share/nginx/html
+        state: directory
+        mode: '0755'
+
+    - name: Deploy React build
+      synchronize:
+        src: build/
+        dest: /usr/share/nginx/html/
+        delete: yes
+        recursive: yes
 
     - name: Restart nginx
       service:
