@@ -121,8 +121,7 @@ const Footer = () => {
                 </div>
               </div>
               <p style={styles.brandDescription}>
-                Building scalable infrastructure, automating deployments, 
-                and optimizing cloud solutions for modern applications.
+              
               </p>
               <div style={styles.techTags}>
                 {techStack.map((tech, index) => (
