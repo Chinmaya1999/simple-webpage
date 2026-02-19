@@ -269,28 +269,6 @@ const Footer = () => {
         </div>
 
         {/* Terminal Status Bar */}
-        <div style={styles.terminalBar}>
-          <div style={styles.terminalContent}>
-            <div style={styles.terminalText}>
-              <span style={styles.prompt}>$</span>
-              <span style={styles.command}> cat status.log</span>
-            </div>
-            <div style={styles.statusIndicators}>
-              <span style={styles.statusItem}>
-                <div style={styles.statusDot}></div>
-                System: Operational
-              </span>
-              <span style={styles.statusItem}>
-                <div style={{...styles.statusDot, backgroundColor: '#64ffda'}}></div>
-                API: 200 OK
-              </span>
-              <span style={styles.statusItem}>
-                <div style={{...styles.statusDot, backgroundColor: '#4a6cf7'}}></div>
-                SSL: Secured
-              </span>
-            </div>
-          </div>
-        </div>
       </footer>
     </>
   );
