@@ -3,7 +3,7 @@ name: React CI/CD Deploy
 on:
   push:
     branches:
-      - master   # change if using another branch
+      - master   
 
 jobs:
   build-and-deploy:
