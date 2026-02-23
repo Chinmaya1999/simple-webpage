@@ -85,7 +85,7 @@ const Header = () => {
               <FiTerminal />
             </div>
             <div style={styles.logoText}>
-              <h2 style={styles.logoName}>Chinmaya</h2>
+              <h2 style={styles.logoName}>Chinmaya .</h2>
               <p style={styles.tagline}>DevOps & Cloud Engineer</p>
             </div>
           </div>
