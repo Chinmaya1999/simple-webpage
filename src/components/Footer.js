@@ -262,7 +262,7 @@ const Footer = () => {
           <div style={styles.madeWith}>
             <div style={styles.madeWithContent}>
               <FiHeart style={{ color: '#ff6b6b', marginRight: '8px' }} />
-              Made with passion for infrastructure and automation
+              chinmaya
               <span style={styles.heartbeat}> ♥</span>
             </div>
           </div>
